@@ -22,7 +22,8 @@ namespace PU3
             Db database = new Db();
             if(database.TryAuth(textBox1.Text, textBox2.Text) != 0)
             {
-                User u = new User()
+                User u = database.GetUser(textBox1.Text, textBox2.Text);
+
             }
 
         }
