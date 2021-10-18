@@ -12,9 +12,21 @@ namespace PU3
 {
     public partial class Main : Form
     {
-        public Main()
+
+        private User currentUser;
+        public Main(User u)
         {
             InitializeComponent();
+            this.currentUser = u;
+            if(currentUser.GetGroup() == 2)
+            {
+                this.button2.Visible = true;
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -56,16 +56,19 @@ namespace PU3
                     string surename = IsNullOrSpace(Surename_Input.Text);
                     DateTime dob = IsDateValid(DateTime.Parse(Dob_Input.Text));
                     p = new Person(name, surename, dob);
-                    User NewUser = new User(p, Nickname_Input.Text, Pw1_Input.Text);
-                    Db Database = new Db();
-                    Database.CreateUser(NewUser);
-                }
-                else
-                {
+                    if (Convert.ToInt32(p.GetAge()) >= 14)
+                    {
+                        User NewUser = new(p, Nickname_Input.Text, Pw1_Input.Text, 1);
+                        Db Database = new();
+                        Database.CreateUser(NewUser);
+
+                    }
+                    }
+                    else
+                    {
                     ErrLabel.Text = "Slaptažodžiai turi sutapti";
                 }
 
-                //MessageBox.Show(p.PrintInfo(), "Informacija", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception exc)
             {

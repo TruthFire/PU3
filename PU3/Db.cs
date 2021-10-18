@@ -50,7 +50,6 @@ namespace PU3
                   "INSERT INTO User(nick, password, name, surename, dob, user_group) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', 1);",
               u.GetNick(), u.GetPwd(), u.Person.GetName(), u.Person.GetSurename(), u.Person.GetDob()
             );
-            //string sql = "INSERT INTO User(nick, password, name, surename, dob, user_group) VALUES ('Trfr', '123123', 'Tim', 'Kal', '2000.11.29', 1);";
            
             SQLiteCommand cmd = new SQLiteCommand(sql, dbConnection);
             var asd = cmd.ExecuteNonQuery();
@@ -64,33 +63,35 @@ namespace PU3
             dbConnection.Open();
             string sql = string.Format("SELECT id FROM User WHERE (nick='{0}' AND password='{1}')", name, pwd);
             SQLiteCommand cmd = new SQLiteCommand(sql, dbConnection);
-            //SQLiteDataReader reader = cmd.ExecuteReader();
             int s= Convert.ToInt32(cmd.ExecuteScalar());
             dbConnection.Close();
-          //  cmd.ExecuteReader();
             return s;
         }
 
         public User GetUser(string nick, string pwd)
         {
 
-            string sql = string.Format("SELECT * FROM User WHERE id = {0}", nick, pwd);
+            string sql = string.Format("SELECT * FROM User WHERE id = {0}", TryAuth(nick, pwd));
             dbConnection.Open();
-            SQLiteCommand cmd = new SQLiteCommand(sql, dbConnection);
+            SQLiteCommand cmd = new(sql, dbConnection);
             SQLiteDataReader rdr = cmd.ExecuteReader();
             if(rdr.Read())
             {
                 string name = rdr["name"].ToString();
                 string surename = rdr["surename"].ToString();
                 DateTime dob = Convert.ToDateTime(rdr["dob"]);
-                Person p = new Person(name, surename, dob);
-                User u = new User(p, nick, pwd);
+                int Group = Convert.ToInt32(rdr["group"]);
+                Person p = new(name, surename, dob);
+                User u = new(p, nick, pwd, Group);
+                dbConnection.Close();
                 return u;
             }
             else
             {
+                dbConnection.Close();
                 return null;
             }
+            
 
         }
 

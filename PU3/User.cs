@@ -11,8 +11,9 @@ namespace PU3
         public Person Person { get; set; }
         protected string Nick { get; set; }
         protected string Pwd { get; set; }
+        protected int Group { get; set; }
 
-        public User(Person p, string nick, string pwd)
+        public User(Person p, string nick, string pwd, int group)
         {
             this.Person = p;
             this.Nick = nick;
@@ -26,6 +27,11 @@ namespace PU3
         public string GetPwd()
         {
             return this.Pwd;
+        }
+
+        public int GetGroup()
+        {
+            return this.Group;
         }
         
        
