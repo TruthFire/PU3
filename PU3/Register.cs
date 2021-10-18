@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace PU3
@@ -17,7 +10,7 @@ namespace PU3
         {
             InitializeComponent();
         }
-        
+
 
         private string IsNullOrSpace(string s)
         {
@@ -46,13 +39,13 @@ namespace PU3
 
         private void button1_Click(object sender, EventArgs e)
         {
-            
+
             try
             {
                 if (DoPasswordsMatch(Pw1_Input.Text, Pw2_Input.Text))
                 {
                     Person p;
-                    string name = IsNullOrSpace(this.Name_Input.Text);
+                    string name = IsNullOrSpace(Name_Input.Text);
                     string surename = IsNullOrSpace(Surename_Input.Text);
                     DateTime dob = IsDateValid(DateTime.Parse(Dob_Input.Text));
                     p = new Person(name, surename, dob);
@@ -63,19 +56,19 @@ namespace PU3
                         Database.CreateUser(NewUser);
 
                     }
-                    }
-                    else
-                    {
+                }
+                else
+                {
                     ErrLabel.Text = "Slaptažodžiai turi sutapti";
                 }
 
             }
             catch (Exception exc)
             {
-                this.Name_Input.Text = ""; this.Surename_Input.Text = ""; this.Dob_Input.Text = "";
+                Name_Input.Text = ""; Surename_Input.Text = ""; Dob_Input.Text = "";
                 MessageBox.Show(exc.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            
+
         }
     }
 }

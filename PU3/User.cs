@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PU3
+﻿namespace PU3
 {
     public class User
     {
@@ -15,26 +9,26 @@ namespace PU3
 
         public User(Person p, string nick, string pwd, int group)
         {
-            this.Person = p;
-            this.Nick = nick;
-            this.Pwd = pwd;
+            Person = p;
+            Nick = nick;
+            Pwd = pwd;
         }
 
         public string GetNick()
         {
-            return this.Nick;
-        }  
+            return Nick;
+        }
         public string GetPwd()
         {
-            return this.Pwd;
+            return Pwd;
         }
 
         public int GetGroup()
         {
-            return this.Group;
+            return Group;
         }
-        
-       
+
+
 
     }
 }

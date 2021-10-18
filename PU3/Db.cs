@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Data.SQLite;
 using System.IO;
 
@@ -27,7 +23,7 @@ namespace PU3
         SQLiteConnection dbConnection = new SQLiteConnection("Data Source=pu.db");
         public Db()
         {
-            if(!File.Exists("pu.db"))
+            if (!File.Exists("pu.db"))
             {
                 SQLiteConnection.CreateFile("pu.db");
             }
@@ -41,16 +37,16 @@ namespace PU3
             create.ExecuteNonQuery();
             dbConnection.Close();
         }
-        
+
         public int CreateUser(User u)
         {
 
             dbConnection.Open();
-              string sql = string.Format(
-                  "INSERT INTO User(nick, password, name, surename, dob, user_group) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', 1);",
-              u.GetNick(), u.GetPwd(), u.Person.GetName(), u.Person.GetSurename(), u.Person.GetDob()
-            );
-           
+            string sql = string.Format(
+                "INSERT INTO User(nick, password, name, surename, dob, user_group) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', 1);",
+            u.GetNick(), u.GetPwd(), u.Person.GetName(), u.Person.GetSurename(), u.Person.GetDob()
+          );
+
             SQLiteCommand cmd = new SQLiteCommand(sql, dbConnection);
             var asd = cmd.ExecuteNonQuery();
             dbConnection.Close();
@@ -63,7 +59,7 @@ namespace PU3
             dbConnection.Open();
             string sql = string.Format("SELECT id FROM User WHERE (nick='{0}' AND password='{1}')", name, pwd);
             SQLiteCommand cmd = new SQLiteCommand(sql, dbConnection);
-            int s= Convert.ToInt32(cmd.ExecuteScalar());
+            int s = Convert.ToInt32(cmd.ExecuteScalar());
             dbConnection.Close();
             return s;
         }
@@ -75,7 +71,7 @@ namespace PU3
             dbConnection.Open();
             SQLiteCommand cmd = new(sql, dbConnection);
             SQLiteDataReader rdr = cmd.ExecuteReader();
-            if(rdr.Read())
+            if (rdr.Read())
             {
                 string name = rdr["name"].ToString();
                 string surename = rdr["surename"].ToString();
@@ -91,7 +87,7 @@ namespace PU3
                 dbConnection.Close();
                 return null;
             }
-            
+
 
         }
 
