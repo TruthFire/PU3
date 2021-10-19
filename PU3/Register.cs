@@ -42,6 +42,7 @@ namespace PU3
 
             try
             {
+                ErrLabel.Text = "";
                 if (DoPasswordsMatch(Pw1_Input.Text, Pw2_Input.Text))
                 {
                     Person p;
@@ -54,7 +55,14 @@ namespace PU3
                         User NewUser = new(p, Nickname_Input.Text, Pw1_Input.Text, 1);
                         Db Database = new();
                         Database.CreateUser(NewUser);
+                        Main mForm = new(NewUser);
+                        mForm.Show();
+                        this.Close();
 
+                    }
+                    else
+                    {
+                        ErrLabel.Text = "Jūs turite būti vyresnis nei 14 metų";
                     }
                 }
                 else
@@ -65,10 +73,15 @@ namespace PU3
             }
             catch (Exception exc)
             {
-                Name_Input.Text = ""; Surename_Input.Text = ""; Dob_Input.Text = "";
+                //Name_Input.Text = ""; Surename_Input.Text = ""; Dob_Input.Text = "";
                 MessageBox.Show(exc.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
+        }
+
+        private void Register_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Application.Exit();
         }
     }
 }

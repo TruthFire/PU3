@@ -57,11 +57,12 @@ namespace PU3
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(339, 577);
+            this.ClientSize = new System.Drawing.Size(339, 89);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Name = "Main";
-            this.Text = "Main";
+            this.Text = "MainF";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Main_FormClosed);
             this.ResumeLayout(false);
 
         }

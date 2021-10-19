@@ -5,8 +5,8 @@ namespace PU3
     public class Person
     {
 
-        private string Name, Surename;
-        private DateTime Dob;
+        protected string Name, Surename;
+        protected DateTime Dob;
 
 
         public Person(string name, string surename, DateTime dob)
@@ -15,6 +15,8 @@ namespace PU3
             Surename = surename;
             Dob = dob;
         }
+
+        public Person() { }
 
         public string GetAge()
         {
@@ -41,7 +43,7 @@ namespace PU3
             return (int)days;
         }
 
-        private bool IsBdBeen() // ar buvo gimtadienis simet?
+        protected bool IsBdBeen() // ar buvo gimtadienis simet?
         {
             bool rez = false;
             DateTime curr = DateTime.Now;

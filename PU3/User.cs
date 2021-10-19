@@ -1,17 +1,21 @@
 ﻿namespace PU3
 {
-    public class User
+    public class User : Person
     {
-        public Person Person { get; set; }
+
         protected string Nick { get; set; }
         protected string Pwd { get; set; }
         protected int Group { get; set; }
+        protected int Id { get; set; }
 
         public User(Person p, string nick, string pwd, int group)
         {
-            Person = p;
+            Name = p.GetName();
+            Surename = p.GetSurename();
+            Dob = p.GetDob();
             Nick = nick;
             Pwd = pwd;
+            Group = group;
         }
 
         public string GetNick()
@@ -26,6 +30,12 @@
         public int GetGroup()
         {
             return Group;
+        }
+
+        public int GetId()
+        {
+            Db DataBase = new();
+            return DataBase.TryAuth(Nick, Pwd);
         }
 
 

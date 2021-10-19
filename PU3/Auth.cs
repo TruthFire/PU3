@@ -16,6 +16,9 @@ namespace PU3
             if (database.TryAuth(textBox1.Text, textBox2.Text) != 0)
             {
                 User u = database.GetUser(textBox1.Text, textBox2.Text);
+                Main mForm = new(u);
+                mForm.Show();
+                this.Hide();
 
             }
 

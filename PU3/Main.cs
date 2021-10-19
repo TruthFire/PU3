@@ -19,7 +19,14 @@ namespace PU3
 
         private void button1_Click(object sender, EventArgs e)
         {
-                
+            Profile prof = new(currentUser);
+            prof.Show();
+            this.Hide();
+        }
+
+        private void Main_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Application.Exit();
         }
     }
 }

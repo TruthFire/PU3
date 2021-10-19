@@ -44,7 +44,7 @@ namespace PU3
             dbConnection.Open();
             string sql = string.Format(
                 "INSERT INTO User(nick, password, name, surename, dob, user_group) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', 1);",
-            u.GetNick(), u.GetPwd(), u.Person.GetName(), u.Person.GetSurename(), u.Person.GetDob()
+            u.GetNick(), u.GetPwd(), u.GetName(), u.GetSurename(), u.GetDob()
           );
 
             SQLiteCommand cmd = new SQLiteCommand(sql, dbConnection);
@@ -76,9 +76,10 @@ namespace PU3
                 string name = rdr["name"].ToString();
                 string surename = rdr["surename"].ToString();
                 DateTime dob = Convert.ToDateTime(rdr["dob"]);
-                int Group = Convert.ToInt32(rdr["group"]);
+                int Group = Convert.ToInt32(rdr["user_group"]);
                 Person p = new(name, surename, dob);
-                User u = new(p, nick, pwd, Group);
+                User u = new(p,nick, pwd, Group);
+                p = u;
                 dbConnection.Close();
                 return u;
             }
@@ -87,8 +88,24 @@ namespace PU3
                 dbConnection.Close();
                 return null;
             }
+        }
 
+        public void DeleteUser(string username)
+        {
+            string sql = String.Format("DELETE FROM User WHERE nick={0}", username);
+            dbConnection.Open();
+            SQLiteCommand delete = new(sql, dbConnection);
+            delete.ExecuteNonQuery();
+            dbConnection.Close();
+        }
 
+        public void UpdateImg(int id, string fn)
+        {
+            string sql = String.Format("UPDATE User set avatar={0} WHERE id={1}", fn, id);
+            dbConnection.Open();
+            SQLiteCommand upd = new(sql, dbConnection);
+            upd.ExecuteNonQuery();
+            dbConnection.Close();
         }
 
     }
