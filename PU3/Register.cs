@@ -54,10 +54,18 @@ namespace PU3
                     {
                         User NewUser = new(p, Nickname_Input.Text, Pw1_Input.Text, 1);
                         Db Database = new();
-                        Database.CreateUser(NewUser);
-                        Main mForm = new(NewUser);
-                        mForm.Show();
-                        this.Close();
+                        if(Database.CreateUser(NewUser))
+                        {
+                            Main mForm = new(NewUser);
+                            mForm.Show();
+                            this.Close();
+                        }
+                        else
+                        {
+                            ErrLabel.Text = "Šis slapyvardis jau užimtas";
+                        }
+
+                        
 
                     }
                     else

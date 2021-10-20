@@ -21,8 +21,9 @@ namespace PU3
         {
             this.textBox1.ReadOnly = status;
             this.textBox2.ReadOnly = status;
+            this.textBox3.ReadOnly = status;
             button1.Visible = status;
-            button3.Visible = !status;
+            button4.Visible = !status;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -51,6 +52,26 @@ namespace PU3
                 Db db = new();
                 db.UpdateImg(curr.GetId(), fn);
 
+            }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            string OldPwd = textBox1.Text;
+            string NewPwd = textBox2.Text;
+            string NewPwd1 = textBox3.Text;
+            Db db = new();
+            if(NewPwd != NewPwd1)
+            {
+                this.label5.Text = "Nauji slaptažodžiai nesutampa";
+            }
+            else if (db.CheckPwd(curr.GetId(), OldPwd))
+            {
+                this.label5.Text = "Senas slaptažodis įvestas neteisingai";
+            }
+            else
+            {
+                db.SetPwd(NewPwd, curr.GetId());
             }
         }
     }

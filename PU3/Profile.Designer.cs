@@ -41,6 +41,8 @@ namespace PU3
             this.label3 = new System.Windows.Forms.Label();
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.button3 = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
+            this.label5 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -63,17 +65,17 @@ namespace PU3
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(12, 308);
+            this.button1.Location = new System.Drawing.Point(12, 335);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(118, 48);
             this.button1.TabIndex = 10;
-            this.button1.Text = "Redaguoti";
+            this.button1.Text = "Pakeisti slaptažodi";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(136, 308);
+            this.button2.Location = new System.Drawing.Point(136, 335);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(118, 48);
             this.button2.TabIndex = 11;
@@ -131,6 +133,7 @@ namespace PU3
             // 
             this.textBox3.Location = new System.Drawing.Point(13, 270);
             this.textBox3.Name = "textBox3";
+            this.textBox3.ReadOnly = true;
             this.textBox3.Size = new System.Drawing.Size(129, 23);
             this.textBox3.TabIndex = 15;
             // 
@@ -144,11 +147,34 @@ namespace PU3
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(12, 335);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(118, 48);
+            this.button4.TabIndex = 17;
+            this.button4.Text = "Išsaugoti";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Visible = false;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.ForeColor = System.Drawing.Color.Red;
+            this.label5.Location = new System.Drawing.Point(13, 308);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(25, 15);
+            this.label5.TabIndex = 18;
+            this.label5.Text = "asd";
+            // 
             // Profile
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(270, 366);
+            this.ClientSize = new System.Drawing.Size(270, 395);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.button4);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.textBox3);
             this.Controls.Add(this.label3);
@@ -183,5 +209,7 @@ namespace PU3
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Label label5;
     }
 }
