@@ -8,6 +8,9 @@ namespace PU3
         public Auth()
         {
             InitializeComponent();
+            //Db db = new();
+            //MessageBox.Show(db.GetAvatar(1));
+
         }
 
         private void button1_Click(object sender, EventArgs e)

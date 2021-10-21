@@ -54,18 +54,19 @@ namespace PU3
                     {
                         User NewUser = new(p, Nickname_Input.Text, Pw1_Input.Text, 1);
                         Db Database = new();
-                        if(Database.CreateUser(NewUser))
+                        if (!Database.CheckNick(NewUser.GetNick()))
                         {
+                            Database.CreateUser(NewUser);
                             Main mForm = new(NewUser);
                             mForm.Show();
-                            this.Close();
+                            this.Hide();
                         }
                         else
                         {
                             ErrLabel.Text = "Šis slapyvardis jau užimtas";
                         }
 
-                        
+
 
                     }
                     else
@@ -80,8 +81,7 @@ namespace PU3
 
             }
             catch (Exception exc)
-            {
-                //Name_Input.Text = ""; Surename_Input.Text = ""; Dob_Input.Text = "";
+            { 
                 MessageBox.Show(exc.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 

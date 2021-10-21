@@ -7,6 +7,9 @@
         protected string Pwd { get; set; }
         protected int Group { get; set; }
         protected int Id { get; set; }
+        protected string Avatar = null;
+        bool isAdmin { get; set;  }
+
 
         public User(Person p, string nick, string pwd, int group)
         {
@@ -16,6 +19,9 @@
             Nick = nick;
             Pwd = pwd;
             Group = group;
+            Id = GetId();
+            Avatar = GetAvatar();
+            isAdmin = false;
         }
 
         public string GetNick()
@@ -34,10 +40,37 @@
 
         public int GetId()
         {
-            Db DataBase = new();
-            return DataBase.TryAuth(Nick, Pwd);
+            if (Id == 0)
+            {
+                Db DataBase = new();
+                this.Id = DataBase.TryAuth(Nick, Pwd);
+            }
+            return this.Id;
         }
 
+        public void SetAvatar(string avtr)
+        {
+            Avatar = avtr;
+            Db db = new();
+            db.UpdateAvatar(Id, avtr);
+
+        }
+
+        private string GetAvatar()
+        {
+            if (Avatar == null)
+            {
+                Db db = new();
+                Avatar = db.GetAvatar(Id);
+            }
+            return Avatar;
+        }
+
+        public bool IsAdmin()
+        {
+            return Group == 2;
+
+        }
 
 
     }

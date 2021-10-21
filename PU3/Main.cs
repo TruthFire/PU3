@@ -28,5 +28,13 @@ namespace PU3
         {
             Application.Exit();
         }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            APanel ap = new(currentUser);
+            ap.Show();
+            this.Hide();
+
+        }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Data.SQLite;
-using System.IO;
+using MySql.Data.MySqlClient;
+using System.Data;
 
 /* CREATE TABLE "User" (
 	"id"	INTEGER NOT NULL,
@@ -20,58 +20,38 @@ namespace PU3
 {
     public class Db
     {
-        readonly SQLiteConnection dbConnection = new SQLiteConnection("Data Source=pu.db");
+        MySqlConnection dbConnection = new(@"server=localhost;userid=root;password=;database=PU");
         public Db()
         {
-            if (!File.Exists("pu.db"))
-            {
-                SQLiteConnection.CreateFile("pu.db");
-            }
-           
-            
-            string sql = "CREATE TABLE IF NOT EXISTS \"User\" (" +
-                "\"id\"	INTEGER NOT NULL, \"nick\"	TEXT NOT NULL, \"password\"	TEXT NOT NULL," +
-                "\"name\"	TEXT NOT NULL, \"surename\"	TEXT NOT NULL, \"dob\" TEXT NOT NULL, \"avatar\"   TEXT," +
-                "\"user_group\"  INTEGER, PRIMARY KEY(\"id\" AUTOINCREMENT))";
+   
+        }
+
+         public void CreateUser(User u)
+         { 
+            string sql = string.Format(
+            "INSERT INTO `User`(`nick`, `password`, `name`, `surename`, `dob`, `user_group`, `avatar`) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', 1, 'NoAvatar');",
+            u.GetNick(), u.GetPwd(), u.GetName(), u.GetSurename(), u.GetDob()
+            );
             Exec(sql);
-        }
+         }
 
-        public bool CreateUser(User u)
+        public bool CheckNick(string nick)
         {
-
-            if (CheckName(u.GetName()) == 0)
-                return false;
-            else
-            {
-                string sql = string.Format(
-                    "INSERT INTO User(nick, password, name, surename, dob, user_group) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', 1);",
-                u.GetNick(), u.GetPwd(), u.GetName(), u.GetSurename(), u.GetDob()
-                );
-                Exec(sql);
-                return true;
-            }
-
-
-
-        }
-
-        private int CheckName(string name)
-        {
-            string sql = string.Format("SELECT id FROM User where nick={0}", name);
+            string sql = string.Format("SELECT `id` FROM `User` where `nick`='{0}'", nick);
             dbConnection.Open();
-            SQLiteCommand cmd = new(sql, dbConnection);
-            int s = Convert.ToInt32(cmd.ExecuteScalar());
+            MySqlCommand cmd = new(sql, dbConnection);
+            bool rez = Convert.ToInt32(cmd.ExecuteScalar()) != 0;
             dbConnection.Close();
-            return s;
+            return rez;
 
         }
 
 
         public int TryAuth(string name, string pwd)
         { 
-            string sql = string.Format("SELECT id FROM User WHERE (nick='{0}' AND password='{1}')", name, pwd);
+            string sql = string.Format("SELECT `id` FROM `User` WHERE (`nick`='{0}' AND `password`='{1}')", name, pwd);
             dbConnection.Open();
-            SQLiteCommand cmd = new SQLiteCommand(sql, dbConnection);
+            MySqlCommand cmd = new(sql, dbConnection);
             int s = Convert.ToInt32(cmd.ExecuteScalar());
             dbConnection.Close();
             return s;
@@ -80,19 +60,19 @@ namespace PU3
         public User GetUser(string nick, string pwd)
         {
 
-            string sql = string.Format("SELECT * FROM User WHERE id = {0}", TryAuth(nick, pwd));
+            string sql = string.Format("SELECT * FROM `User` WHERE `id` = '{0}'", TryAuth(nick, pwd));
             dbConnection.Open();
-            SQLiteCommand cmd = new(sql, dbConnection);
-            SQLiteDataReader rdr = cmd.ExecuteReader();
+            MySqlCommand cmd = new(sql, dbConnection);
+            MySqlDataReader rdr = cmd.ExecuteReader();
             if (rdr.Read())
             {
                 string name = rdr["name"].ToString();
                 string surename = rdr["surename"].ToString();
                 DateTime dob = Convert.ToDateTime(rdr["dob"]);
                 int Group = Convert.ToInt32(rdr["user_group"]);
+                string avtr = rdr["avatar"].ToString();
                 Person p = new(name, surename, dob);
-                User u = new(p,nick, pwd, Group);
-                p = u;
+                User u = new(p, nick, pwd, Group);
                 dbConnection.Close();
                 return u;
             }
@@ -103,23 +83,23 @@ namespace PU3
             }
         }
 
-        public void DeleteUser(string username)
+        public void DeleteUser(int id)
         {
-            string sql = String.Format("DELETE FROM User WHERE nick={0}", username);
+            string sql = String.Format("DELETE FROM `User` WHERE `id` = '{0}'", id);
             Exec(sql);
         }
 
-        public void UpdateImg(int id, string fn)
+        public void UpdateAvatar(int id, string fn)
         {
-            string sql = String.Format("UPDATE User set avatar={0} WHERE id={1}", fn, id);
-            Exec(sql);
+            string sql = String.Format("UPDATE `User` SET `avatar` = '{0}' WHERE `id` = {1}", fn, id);
+            Exec(sql); 
             
         }
 
         protected void Exec(string sql)
         {
             dbConnection.Open();
-            SQLiteCommand cmd = new(sql, dbConnection);
+            MySqlCommand cmd = new(sql, dbConnection);
             cmd.ExecuteNonQuery();
             dbConnection.Close();
         }
@@ -127,21 +107,55 @@ namespace PU3
         public bool CheckPwd(int id, string pwd)
         {
             
-            string sql = String.Format("SELECT password FROM User WHERE id={0}", id);
+            string sql = String.Format("SELECT `password` FROM `User` WHERE `id` = '{0}'", id);
             dbConnection.Open();
-            SQLiteCommand cmd = new(sql, dbConnection);
-            SQLiteDataReader rdr = cmd.ExecuteReader();
-            string pass = rdr["password"].ToString();
+            MySqlCommand cmd = new(sql, dbConnection);
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            string pass = "";
+            while (rdr.Read())
+            {
+                   pass = rdr["password"].ToString();
+            }
             dbConnection.Close();
             return pass == pwd;
         }
 
         public void SetPwd(string newPwd, int id)
         {
-            string sql = String.Format("UPDATE User SET password={0} WHERE id={1}", newPwd, id);
-            Exec(sql);
+            string sql = String.Format("UPDATE `User` SET `password` = {0} WHERE id={1}", newPwd, id);
+            dbConnection.Open();
+            MySqlCommand cmd = new(sql, dbConnection);
+            cmd.ExecuteNonQuery();
+            dbConnection.Close();
+        }
+        
+        public string GetAvatar(int id)
+        {
+            string sql = string.Format("SELECT `avatar` FROM `User` where `id` = '{0}'", id);
+            dbConnection.Open();
+            MySqlCommand cmd = new(sql, dbConnection);
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            string avtr = "NoAvatar";
+            while (rdr.Read())
+            {
+                avtr = rdr["avatar"].ToString();
+            }
+            dbConnection.Close();
+            return avtr;
+        }
 
-        } 
+        public DataTable FillGridView()
+        {
+            dbConnection.Open();
+            MySqlDataAdapter Da = new();
+            string sql = "SELECT `id`, `nick`, `name`, `surename` FROM `User`";
+            Da.SelectCommand = new MySqlCommand(sql, dbConnection);
+            DataTable dt = new();
+            Da.Fill(dt);
+
+            return dt;
+        }
+
 
     }
 }

@@ -50,7 +50,7 @@ namespace PU3
             // 
             this.pictureBox1.Location = new System.Drawing.Point(12, 37);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(92, 86);
+            this.pictureBox1.Size = new System.Drawing.Size(100, 100);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
@@ -81,6 +81,7 @@ namespace PU3
             this.button2.TabIndex = 11;
             this.button2.Text = "Grižti";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // openFileDialog1
             // 
@@ -139,7 +140,7 @@ namespace PU3
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(110, 100);
+            this.button3.Location = new System.Drawing.Point(118, 114);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(107, 23);
             this.button3.TabIndex = 16;
@@ -164,9 +165,8 @@ namespace PU3
             this.label5.ForeColor = System.Drawing.Color.Red;
             this.label5.Location = new System.Drawing.Point(13, 308);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(25, 15);
+            this.label5.Size = new System.Drawing.Size(0, 15);
             this.label5.TabIndex = 18;
-            this.label5.Text = "asd";
             // 
             // Profile
             // 
