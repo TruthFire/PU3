@@ -10,6 +10,8 @@ namespace PU3
             InitializeComponent();
             //Db db = new();
             //MessageBox.Show(db.GetAvatar(1));
+            Shop s = new();
+            s.Show();
 
         }
 

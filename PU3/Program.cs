@@ -14,7 +14,7 @@ namespace PU3
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Auth());
+            Application.Run(new Shop());
         }
 
     }

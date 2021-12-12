@@ -1,6 +1,7 @@
 ﻿using System;
 using MySql.Data.MySqlClient;
 using System.Data;
+using System.Collections.Generic;
 
 /* CREATE TABLE "User" (
 	"id"	INTEGER NOT NULL,
@@ -155,7 +156,53 @@ namespace PU3
 
             return dt;
         }
+        //SHOP
 
+        public string[] getCategories()
+        {
+            List<string> categories = new List<string>();
+            string sql = "SELECT `name` FROM `category` WHERE 1";
+            dbConnection.Open();
+            MySqlCommand cmd = new(sql, dbConnection);
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            while (rdr.Read())
+            {
+                categories.Add(rdr["name"].ToString());
+            }
+            dbConnection.Close();
 
+            return categories.ToArray();
+        }
+
+        public Product[] GetProducts(int category)
+        {
+            List<Product> products = new List<Product>();
+            string sql = String.Format("SELECT `id`,`name`,`img` FROM `products` WHERE `category` = {0}", category);
+            dbConnection.Open();
+            MySqlCommand cmd = new(sql, dbConnection);
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            while (rdr.Read())
+            {
+                products.Add(new((int)rdr["id"],rdr["name"].ToString(), rdr["img"].ToString()));
+            }
+            dbConnection.Close();
+
+            return products.ToArray();
+        }
+
+        public int GetProductAmount(int category)
+        {
+            string sql = string.Format("SELECT COUNT(`id`) AS amount FROM `products` where `category` = '{0}' ", category);
+            dbConnection.Open();
+            MySqlCommand cmd = new(sql, dbConnection);
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            int amount = 0;
+            while (rdr.Read())
+            {
+                amount = (int)rdr["amount"];
+            }
+            dbConnection.Close();
+            return amount;
+        }
     }
 }
