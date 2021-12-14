@@ -13,6 +13,7 @@ namespace PU3
     public partial class Shop : Form
     {
         List<Panel> renderedPanels;
+        int currentPage = 1;
         public Shop()
         {
             Db db = new();
@@ -24,13 +25,15 @@ namespace PU3
                 treeView1.Nodes.Add(nodes[i]);
             }
             renderedPanels = ShowProducts(1, prods);
+            ShowPages(1);
 
 
             //this.Controls.Add(new LinkLabel() { Name = "ll1", Text = "Link", Location = new System.Drawing.Point(34, 134), Size = new Size(60,15) });
 
         }
 
-        
+        //крч. текущая страница - просто лэйбл, остальные линком. При клике на линк - диспоуз всех существующих панелей и рендер новых.
+        //При смене категорий - тоже самое. Не забудь на трезвую. А так похуй. Писать немного.
 
         public List<Panel> ShowProducts(int page, Product[] prods)
         {
@@ -50,8 +53,10 @@ namespace PU3
                 pan.BorderStyle = BorderStyle.FixedSingle;
                 pan.Location = new Point(152 * xMult, 57 + AddY); //location
                 pan.Size = new Size(133, 157);  //size
+                pan.BackColor = Color.White;
                 panels.Add(pan);
                 LinkLabel prodLabel = new();
+                prodLabel.Name = "prodLl"+i.ToString();
                 prodLabel.Text = prods[i].getName();
                 prodLabel.Location = new Point(3, 130);
                 prodLabel.Click += new EventHandler(this.prodLl_Click);
@@ -71,10 +76,49 @@ namespace PU3
 
         }
 
+        public void ShowPages(int currPage)
+        {
+            int xVal = 62;
+            Panel panel = new Panel();
+            panel.Name = "pagesPanel";
+            panel.Size = new Size(590, 31);
+            panel.Location = new Point(152, 386);
+            panel.BorderStyle = BorderStyle.FixedSingle;
+            for (int i = 1; i <= 8; i++)
+            {
+                if (i == currPage)
+                {
+                    Label currentP = new Label();
+                    currentP.Name = "currentPageLabel" + i.ToString();
+                    currentP.Text = i.ToString();
+                    currentP.Location = new Point(xVal, 8);
+                    currentP.Size = new Size(15, 15);
+                    panel.Controls.Add(currentP);
+                }
+                else
+                {
+                    LinkLabel otherP = new LinkLabel();
+                    otherP.Name = "currentPageLabel" + i.ToString();
+                    otherP.Text = i.ToString();
+                    otherP.Location = new Point(xVal, 8);
+                    otherP.Size = new Size(15, 15);
+                    panel.Controls.Add(otherP);
+
+                }
+                
+                xVal += 15;
+            }
+
+            this.Controls.Add(panel);
+            //return panel;
+
+        }
+
         void prodLl_Click(object sender, EventArgs e)
         {
             LinkLabel ll = sender as LinkLabel;
-            MessageBox.Show(ll.Text);
+            ShopItem si = new(RenderedPanels[(int)ll.Name.Last]);
+            si.Show();
         }
 
         private void Shop_FormClosed(object sender, FormClosedEventArgs e)
