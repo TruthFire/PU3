@@ -57,8 +57,8 @@ namespace PU3
                         if (!Database.CheckNick(NewUser.GetNick()))
                         {
                             Database.CreateUser(NewUser);
-                            Main mForm = new(NewUser);
-                            mForm.Show();
+                            Shop s = new(NewUser);
+                            s.Show();
                             this.Hide();
                         }
                         else

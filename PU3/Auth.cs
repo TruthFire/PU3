@@ -10,8 +10,6 @@ namespace PU3
             InitializeComponent();
             //Db db = new();
             //MessageBox.Show(db.GetAvatar(1));
-            Shop s = new();
-            s.Show();
 
         }
 
@@ -21,8 +19,8 @@ namespace PU3
             if (database.TryAuth(textBox1.Text, textBox2.Text) != 0)
             {
                 User u = database.GetUser(textBox1.Text, textBox2.Text);
-                Main mForm = new(u);
-                mForm.Show();
+                Shop s = new(u);
+                s.Show();
                 this.Hide();
 
             }

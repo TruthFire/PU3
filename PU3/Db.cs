@@ -84,6 +84,34 @@ namespace PU3
             }
         }
 
+        public string GetNameById(int id)
+        {
+            string nick = "";
+            string sql = string.Format("SELECT `nick` FROM `user` WHERE `id` = '{0}'", id);
+            if (dbConnection.State != ConnectionState.Open)
+            {
+                dbConnection.Open();
+                MySqlCommand cmd = new(sql, dbConnection);
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                
+                while (rdr.Read())
+                {
+                    nick = rdr["nick"].ToString();
+                }
+                dbConnection.Close();
+            }
+            else
+            {
+                MySqlCommand cmd = new(sql, dbConnection);
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    nick = rdr["nick"].ToString();
+                }
+            }
+            return nick;
+        }
+
         public void DeleteUser(int id)
         {
             string sql = String.Format("DELETE FROM `User` WHERE `id` = '{0}'", id);
@@ -153,7 +181,7 @@ namespace PU3
             Da.SelectCommand = new MySqlCommand(sql, dbConnection);
             DataTable dt = new();
             Da.Fill(dt);
-
+            dbConnection.Close();
             return dt;
         }
         //SHOP
@@ -177,13 +205,13 @@ namespace PU3
         public Product[] GetProducts(int category)
         {
             List<Product> products = new List<Product>();
-            string sql = String.Format("SELECT `id`,`name`,`img` FROM `products` WHERE `category` = {0}", category);
+            string sql = String.Format("SELECT `id`,`name`,`img`, `price` FROM `products` WHERE `category` = {0}", category);
             dbConnection.Open();
             MySqlCommand cmd = new(sql, dbConnection);
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
-                products.Add(new((int)rdr["id"],rdr["name"].ToString(), rdr["img"].ToString()));
+                products.Add(new((int)rdr["id"],rdr["name"].ToString(), rdr["img"].ToString(), (int)rdr["price"]));
             }
             dbConnection.Close();
 
@@ -203,6 +231,48 @@ namespace PU3
             }
             dbConnection.Close();
             return amount;
+        }
+
+        public int GetCommentAmount(int product)
+        {
+            string sql = string.Format("SELECT COUNT(`id`) AS amount FROM `comments` where `product_id` = '{0}' ", product);
+            dbConnection.Open();
+            MySqlCommand cmd = new(sql, dbConnection);
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            int amount = 0;
+            while (rdr.Read())
+            {
+                amount = Convert.ToInt32(rdr["amount"]);
+            }
+            dbConnection.Close();
+            return amount;
+        }
+
+        public void AddComment(int posterId,int productId, string text, DateTime d)
+        {
+            string sql = string.Format("INSERT INTO `comments`(`author_id`, `product_id`, `comment`, `c_date`) VALUES ('{0}','{1}','{2}', '{3}')", posterId, productId, text, d.ToString("dd-MM-yyyy. HH:mm"));
+            Exec(sql);
+        }
+
+        public Comment[] getComments(int prodId)
+        {
+            List<Comment> comments = new List<Comment>();
+            if (GetCommentAmount(prodId) > 0)
+            {
+                string sql = string.Format("SELECT `id`, `author_id`,`comment`, `c_date` FROM `comments` WHERE `product_id` = '{0}'", prodId);
+
+                dbConnection.Open();
+                MySqlCommand cmd = new(sql, dbConnection);
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    comments.Add(new((int)rdr["id"], rdr["comment"].ToString(), (int)rdr["author_id"], rdr["c_date"].ToString()));
+                }
+                rdr.Close();
+                dbConnection.Close();
+                return comments.ToArray();
+            }
+            return null;
         }
     }
 }
