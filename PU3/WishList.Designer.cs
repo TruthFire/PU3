@@ -1,6 +1,6 @@
 ﻿namespace PU3
 {
-    partial class WhishList
+    partial class WishList
     {
         /// <summary>
         /// Required designer variable.
@@ -38,14 +38,15 @@
             this.panel1.Size = new System.Drawing.Size(628, 448);
             this.panel1.TabIndex = 0;
             // 
-            // WhishList
+            // WishList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(629, 450);
             this.Controls.Add(this.panel1);
-            this.Name = "WhishList";
-            this.Text = "WhishList";
+            this.Name = "WishList";
+            this.Text = "WishList";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.WishList_FormClosed);
             this.ResumeLayout(false);
 
         }

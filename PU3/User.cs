@@ -8,7 +8,8 @@
         protected int Group { get; set; }
         protected int Id { get; set; }
         protected string Avatar = null;
-        bool isAdmin { get; set;  }
+       
+        protected int[] WishListedIds { get; set; }
 
 
         public User(Person p, string nick, string pwd, int group)
@@ -21,7 +22,7 @@
             Group = group;
             Id = GetId();
             Avatar = GetAvatar();
-            isAdmin = false;
+            
         }
 
         public string GetNick()
@@ -36,6 +37,13 @@
         public int GetGroup()
         {
             return Group;
+        }
+
+        
+        public int[] getWishedIds()
+        {
+            Db db = new Db();
+            return db.getWishedIds(Id);
         }
 
         public int GetId()

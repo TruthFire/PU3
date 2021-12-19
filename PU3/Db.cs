@@ -173,11 +173,38 @@ namespace PU3
             return avtr;
         }
 
-        public DataTable FillGridView()
+        public DataTable FillUserGridView()
         {
             dbConnection.Open();
             MySqlDataAdapter Da = new();
             string sql = "SELECT `id`, `nick`, `name`, `surename` FROM `User`";
+            Da.SelectCommand = new MySqlCommand(sql, dbConnection);
+            DataTable dt = new();
+            Da.Fill(dt);
+            dbConnection.Close();
+            return dt;
+        }
+
+        public DataTable FillCategoryGridView()
+        {
+            dbConnection.Open();
+            MySqlDataAdapter Da = new();
+            string sql = "SELECT `id`, `name` FROM `category`";
+            Da.SelectCommand = new MySqlCommand(sql, dbConnection);
+            DataTable dt = new();
+            Da.Fill(dt);
+            dbConnection.Close();
+            return dt;
+        }
+
+  
+
+
+        public DataTable FillProductGridView()
+        {
+            dbConnection.Open();
+            MySqlDataAdapter Da = new();
+            string sql = "SELECT `id`, `name`, `price`, `category` FROM `products`";
             Da.SelectCommand = new MySqlCommand(sql, dbConnection);
             DataTable dt = new();
             Da.Fill(dt);
@@ -205,19 +232,42 @@ namespace PU3
         public Product[] GetProducts(int category)
         {
             List<Product> products = new List<Product>();
-            string sql = String.Format("SELECT `id`,`name`,`img`, `price` FROM `products` WHERE `category` = {0}", category);
+            string sql = String.Format("SELECT `id`,`name`,`img`, `price`, `description` FROM `products` WHERE `category` = {0}", category);
             dbConnection.Open();
             MySqlCommand cmd = new(sql, dbConnection);
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
-                products.Add(new((int)rdr["id"],rdr["name"].ToString(), rdr["img"].ToString(), (int)rdr["price"]));
+                products.Add(new((int)rdr["id"],rdr["name"].ToString(), rdr["img"].ToString(), (int)rdr["price"], rdr["description"].ToString()));
             }
             dbConnection.Close();
 
             return products.ToArray();
         }
 
+        public Product GetProduct(int Id)
+        {
+            Product p = null;
+
+            string sql = String.Format("SELECT `id`,`name`,`img`, `price`, `description` FROM `products` WHERE `id` = {0}", Id);
+            dbConnection.Open();
+            MySqlCommand cmd = new(sql, dbConnection);
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            while (rdr.Read())
+            {
+               p  = new((int)rdr["id"], rdr["name"].ToString(), rdr["img"].ToString(), (int)rdr["price"], rdr["description"].ToString());
+            }
+            dbConnection.Close();
+
+            return p;
+        }
+
+
+        public void RemoveProduct(int pId)
+        {
+            string sql = string.Format("DELETE FROM `products` WHERE `id` = '{0}'", pId);
+            Exec(sql);
+        }
         public int GetProductAmount(int category)
         {
             string sql = string.Format("SELECT COUNT(`id`) AS amount FROM `products` where `category` = '{0}' ", category);
@@ -233,6 +283,27 @@ namespace PU3
             return amount;
         }
 
+        public int getCategoryId(string cat_name)
+        {
+            int categoryId = 0;
+            string sql = string.Format("SELECT `id` FROM `category` WHERE `name` = '{0}'", cat_name);
+            dbConnection.Open();
+            MySqlCommand cmd = new(sql, dbConnection);
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            while (rdr.Read())
+            {
+                categoryId = (int)rdr["id"];
+            }
+            dbConnection.Close();
+
+            return categoryId;
+        }
+
+        public void addProduct(string name, string category, int price, string img, string description)
+        {
+            string sql = string.Format("INSERT INTO `products`(`name`, `price`, `category`, `img`, `description`) VALUES ('{0}','{1}','{2}','{3}','{4}')",name, price, getCategoryId(category), img, description);
+            Exec(sql);
+        }
         public int GetCommentAmount(int product)
         {
             string sql = string.Format("SELECT COUNT(`id`) AS amount FROM `comments` where `product_id` = '{0}' ", product);
@@ -251,6 +322,24 @@ namespace PU3
         public void AddComment(int posterId,int productId, string text, DateTime d)
         {
             string sql = string.Format("INSERT INTO `comments`(`author_id`, `product_id`, `comment`, `c_date`) VALUES ('{0}','{1}','{2}', '{3}')", posterId, productId, text, d.ToString("dd-MM-yyyy. HH:mm"));
+            Exec(sql);
+        }
+
+        public void deleteComment(int commId)
+        {
+            string sql = string.Format("DELETE FROM `comments` WHERE `id` = '{0}'", commId);
+            Exec(sql);
+        }
+
+        public void AddToWishList(int uId, int pId)
+        {
+            string sql = string.Format("INSERT INTO `wishlist`(`user_id`,`product_id`) VALUES('{0}','{1}')", uId, pId);
+            Exec(sql);
+        }
+        
+        public void RemoveFromWishList(int uId, int pId)
+        {
+            string sql = string.Format("DELETE FROM `wishlist` WHERE `user_id` = '{0}' AND `product_id` = '{1}'", uId, pId);
             Exec(sql);
         }
 
@@ -273,6 +362,62 @@ namespace PU3
                 return comments.ToArray();
             }
             return null;
+        }
+
+        public int[] getWishedIds(int uId)
+        {
+            List<int> ids = new List<int>();
+
+            string sql = string.Format("SELECT `product_id` FROM `wishlist` WHERE `user_id` = '{0}'", uId);
+            dbConnection.Open();
+            MySqlCommand cmd = new(sql, dbConnection);
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            while (rdr.Read())
+            {
+                ids.Add((int)rdr["product_id"]);
+            }
+            rdr.Close();
+            dbConnection.Close();
+            return ids.ToArray();
+
+        }
+
+        public string getProductNameById(int pId)
+        {
+            string sql = string.Format("SELECT `name` FROM `products` WHERE `id`='{0}'", pId);
+            dbConnection.Open();
+            MySqlCommand cmd = new(sql, dbConnection); 
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            string prodName = "";
+            while (rdr.Read())
+            {
+                prodName = rdr["name"].ToString();
+            }
+            rdr.Close();
+            dbConnection.Close();
+
+            return prodName;
+        }
+
+        public void DeleteCategory(int cId)
+        {
+
+            Product[] prods = GetProducts(cId);
+
+            foreach (Product p in prods)
+            {
+                RemoveProduct(p.getId());
+            }
+
+            string sql = string.Format("DELETE FROM `category` WHERE `id` = '{0}'", cId);
+            Exec(sql);
+        }
+
+
+        public void AddCategory(string name)
+        {
+            string sql = string.Format("INSERT INTO `category`(`name`) VALUES ('{0}')", name);
+            Exec(sql);
         }
     }
 }

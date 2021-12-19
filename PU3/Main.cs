@@ -15,6 +15,8 @@ namespace PU3
             {
                 button2.Visible = true;
             }
+
+            
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -35,6 +37,20 @@ namespace PU3
             ap.Show();
             this.Hide();
 
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            WishList wl = new(currentUser);
+            wl.Show();
+            this.Hide();
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            Shop s = new(currentUser);
+            s.Show();
+            this.Hide();
         }
     }
 }

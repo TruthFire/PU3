@@ -10,17 +10,18 @@ namespace PU3
     {
         int id;
         string name;
-        string description;
+        string Description;
         int cat_id;
         string img;
         int Price;
 
-        public Product(int Id, string Name, string Img, int price)
+        public Product(int Id, string Name, string Img, int price, string description = "")
         {
             this.id = Id;
             this.name = Name;
             this.img = Img;
             this.Price = price;
+            Description = description;
         }
 
         public int getId()
@@ -28,6 +29,10 @@ namespace PU3
             return id;
         }
 
+        public string getDescription()
+        {
+            return Description;
+        }
         public int getPrice()
         {
             return Price;

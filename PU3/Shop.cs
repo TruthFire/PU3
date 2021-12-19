@@ -13,14 +13,14 @@ namespace PU3
     public partial class Shop : Form
     {
         List<Panel> renderedPanels;
-        int currentPage = 1;
         Product[] prods;
         User curr;
+        string[] nodes;
         public Shop(User u = null)
         {
             
             Db db = new();
-            string[] nodes = db.getCategories();
+            nodes = db.getCategories();
             prods = db.GetProducts(1);
             InitializeComponent();
             if (u != null)
@@ -35,24 +35,26 @@ namespace PU3
             {
                 treeView1.Nodes.Add(nodes[i]);
             }
-            renderedPanels = ShowProducts(1, prods);
-            ShowPages(1);
+            renderedPanels = ShowProducts(prods);
 
 
             //this.Controls.Add(new LinkLabel() { Name = "ll1", Text = "Link", Location = new System.Drawing.Point(34, 134), Size = new Size(60,15) });
 
         }
 
-        public List<Panel> ShowProducts(int page, Product[] prods)
+        public List<Panel> ShowProducts(Product[] prods)
         {
+            
             List<Panel> panels = new List<Panel>();
-            int AddY = 0, xMult = 1;
+            int AddY = 0, xMult = 1, rendered = 0;
             for(int i = 0;i < prods.Length; i++)
             {
-                if (i % 4 == 0)
+                if (rendered == 4)
                 {
                     xMult = 1;
                     AddY += 163;
+                    rendered = 0;
+                    
                 }
                 Panel pan = new Panel();
                 pan.Name = "panel" + i;
@@ -67,6 +69,8 @@ namespace PU3
                 prodLabel.Location = new Point(3, 130);
                 prodLabel.Click += new EventHandler(this.prodLl_Click);
                 pan.Controls.Add(prodLabel);
+
+
                 PictureBox pb = new();
                 pb.Name = "prodPb" + i.ToString();
                 pb.Size = new Size(125, 125);
@@ -77,47 +81,14 @@ namespace PU3
                 panels.Add(pan);
                 this.Controls.Add(pan);
                 xMult++;
+                rendered++;
                
             }
+
+            
+            
+            treeView1.Height = 162 * (int)Math.Ceiling((double)panels.Count() / 4);
             return panels;
-
-        }
-
-        public void ShowPages(int currPage)
-        {
-            int xVal = 62;
-            Panel panel = new Panel();
-            panel.Name = "pagesPanel";
-            panel.Size = new Size(590, 31);
-            panel.Location = new Point(152, 386);
-            panel.BorderStyle = BorderStyle.FixedSingle;
-            for (int i = 1; i <= 8; i++)
-            {
-                if (i == currPage)
-                {
-                    Label currentP = new Label();
-                    currentP.Name = "currentPageLabel" + i.ToString();
-                    currentP.Text = i.ToString();
-                    currentP.Location = new Point(xVal, 8);
-                    currentP.Size = new Size(15, 15);
-                    panel.Controls.Add(currentP);
-                }
-                else
-                {
-                    LinkLabel otherP = new LinkLabel();
-                    otherP.Name = "currentPageLabel" + i.ToString();
-                    otherP.Text = i.ToString();
-                    otherP.Location = new Point(xVal, 8);
-                    otherP.Size = new Size(15, 15);
-                    panel.Controls.Add(otherP);
-
-                }
-                
-                xVal += 15;
-            }
-
-            this.Controls.Add(panel);
-            //return panel;
 
         }
 
@@ -136,7 +107,8 @@ namespace PU3
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            
+
+
         }
         
         private void button1_Click(object sender, EventArgs e)
@@ -154,6 +126,37 @@ namespace PU3
             Auth auth = new Auth();
             auth.Show();
             
+        }
+
+        private void ClearPanels()
+        {
+           foreach (Panel panel in this.renderedPanels)
+            {
+                panel.Dispose();
+            }
+        }
+
+        private void treeView1_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            Db db = new();
+            prods = db.GetProducts(db.getCategoryId(e.Node.Text));
+            if (renderedPanels != null)
+                ClearPanels();
+            renderedPanels = ShowProducts(prods);
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            Main m = new(curr);
+            m.Show();
+            this.Hide();
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            Shop ss = new Shop();
+            ss.Show();
+            this.Hide();
         }
     }
 }
