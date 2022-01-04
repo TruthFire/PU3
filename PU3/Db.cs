@@ -2,6 +2,7 @@
 using MySql.Data.MySqlClient;
 using System.Data;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 /* CREATE TABLE "User" (
 	"id"	INTEGER NOT NULL,
@@ -418,6 +419,84 @@ namespace PU3
         {
             string sql = string.Format("INSERT INTO `category`(`name`) VALUES ('{0}')", name);
             Exec(sql);
+        }
+
+        public void addLog(Log l)
+        {
+            string sql = string.Format("INSERT INTO `logs`(`user_id`, `product_id`, `action`, `date`)" +
+                " VALUES ('{0}','{1}','{2}','{3}')", l.getUId(), l.getPId(), l.getAction(), l.getDateString());
+            Exec(sql);
+        }
+
+        public void addToCart(User u, Product p)
+        {
+            string sql = string.Format("INSERT INTO `cart`(`user_id`,`product_id`) VALUES('{0}','{1}')", u.GetId(), p.getId());
+            Exec(sql);
+        }
+
+        public Product[] getUserCart(int uId)
+        {
+            List<int> cartIds = new();
+            string sql = string.Format("SELECT `product_id` FROM `cart` WHERE `user_id` = {0}", uId);
+            dbConnection.Open();
+            MySqlCommand cmd = new(sql, dbConnection);
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            while (rdr.Read())
+            {
+                cartIds.Add(Convert.ToInt32(rdr["product_id"]));
+            }
+            dbConnection.Close();
+            List<Product> cart = new();
+            foreach(int id in cartIds)
+            {
+                cart.Add(GetProduct(id));
+            }
+            return cart.ToArray();
+        }
+
+        public void payForCart(User u, Order o)
+        {
+            string sql = string.Format("DELETE FROM `cart` WHERE `user_id` = {0}", u.GetId());
+            Exec(sql);
+           
+            string json = JsonConvert.SerializeObject(o);
+            DateTime currDateTime = DateTime.Now;
+            string sqlFormattedDate = currDateTime.ToString("yyyy-MM-dd HH:mm:ss.fff");
+            sql = string.Format("INSERT INTO `orders`(`content`, `user_id`, `order_dt`) VALUES ('{0}','{1}','{2}')",json, u.GetId(), sqlFormattedDate);
+            Exec(sql);
+            u.ClearCart();
+        }
+
+        public string GetOrderAmount()
+        {
+            string sql = string.Format("SELECT COUNT(*) AS amount FROM `orders` WHERE 1");
+            dbConnection.Open();
+            MySqlCommand cmd = new(sql, dbConnection);
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            string rez = "";
+            while(rdr.Read())
+            {
+                rez = rdr["amount"].ToString();
+            }
+            rdr.Close();
+            dbConnection.Close();
+            return rez;
+        }
+
+        public string GetOrderList()
+        {
+            string sql = string.Format("SELECT `content` FROM `orders` WHERE 1");
+            dbConnection.Open();
+            MySqlCommand cmd = new(sql, dbConnection);
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            string result = "";
+            while (rdr.Read()) {
+                result += rdr["content"].ToString() + "\n";
+            }
+            rdr.Close();
+            dbConnection.Close();
+
+            return result;    
         }
     }
 }

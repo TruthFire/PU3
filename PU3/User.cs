@@ -1,4 +1,6 @@
-﻿namespace PU3
+﻿using System.Collections.Generic;
+using System.Linq;
+namespace PU3
 {
     public class User : Person
     {
@@ -11,6 +13,9 @@
        
         protected int[] WishListedIds { get; set; }
 
+        protected List<Product> cart = new();
+
+        protected double CartPrice = 0;
 
         public User(Person p, string nick, string pwd, int group)
         {
@@ -22,7 +27,23 @@
             Group = group;
             Id = GetId();
             Avatar = GetAvatar();
-            
+            LoadCart();
+            CountCartPrice();
+        }
+
+        public void ClearCart()
+        {
+            cart.Clear();
+        }
+
+        public int GetCartLength()
+        {
+            return cart.Count();
+        }
+
+        public double GetCartPrice()
+        {
+            return CartPrice;
         }
 
         public string GetNick()
@@ -38,12 +59,17 @@
         {
             return Group;
         }
-
         
         public int[] getWishedIds()
         {
             Db db = new Db();
             return db.getWishedIds(Id);
+        }
+
+        public Product[] getCart()
+        {
+            Db db = new();
+            return db.getUserCart(Id);
         }
 
         public int GetId()
@@ -64,7 +90,20 @@
 
         }
 
-        private string GetAvatar()
+        public bool IsAdmin()
+        {
+            return Group == 2;
+
+        }
+
+        public void AddToCart(Product p)
+        {
+            cart.Add(p);
+            Db db = new();
+            db.addToCart(this, p);
+        }
+
+        protected string GetAvatar()
         {
             if (Avatar == null)
             {
@@ -74,12 +113,19 @@
             return Avatar;
         }
 
-        public bool IsAdmin()
+        protected void LoadCart()
         {
-            return Group == 2;
-
+            Db db = new();
+            cart = db.getUserCart(Id).ToList();
         }
 
+        protected void CountCartPrice()
+        {
+            foreach (Product p in cart)
+            {
+                CartPrice += p.getPrice();
+            }
+        }
 
     }
 }

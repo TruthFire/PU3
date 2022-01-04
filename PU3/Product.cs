@@ -8,12 +8,12 @@ namespace PU3
 {
     public class Product
     {
-        int id;
-        string name;
-        string Description;
-        int cat_id;
-        string img;
-        int Price;
+        public int id { get; set; }
+        public string name { get; set; }
+        string Description { get; set; }
+        //int cat_id;
+        string img { get; set; }
+        public int Price { get; set; }
 
         public Product(int Id, string Name, string Img, int price, string description = "")
         {

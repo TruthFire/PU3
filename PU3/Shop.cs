@@ -20,9 +20,11 @@ namespace PU3
         {
             
             Db db = new();
+            u = db.GetUser("TruthFire", "111");
             nodes = db.getCategories();
             prods = db.GetProducts(1);
             InitializeComponent();
+
             if (u != null)
             {
                 button2.Visible = false;
@@ -30,6 +32,8 @@ namespace PU3
                 button3.Visible = true;
                 button4.Visible = true;
             }
+
+            
 
             for (int i = 0; i < nodes.Length; i++)
             {
@@ -76,6 +80,7 @@ namespace PU3
                 pb.Size = new Size(125, 125);
                 pb.Location = new Point(3, 3);
                 pb.BorderStyle = BorderStyle.FixedSingle;
+                pb.SizeMode = PictureBoxSizeMode.StretchImage;
                 pb.Load("https://i.imgur.com/" + prods[i].getImg());
                 pan.Controls.Add((PictureBox)pb);
                 panels.Add(pan);
@@ -157,6 +162,12 @@ namespace PU3
             Shop ss = new Shop();
             ss.Show();
             this.Hide();
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            Cart c = new(curr);
+            c.Show();
         }
     }
 }

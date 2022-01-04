@@ -16,13 +16,15 @@ namespace PU3
         Product prod;
         List<Panel> commentPanels;
         Comment[] comments;
-        
+        Log prodLog;
+
+
 
         public ShopItem(Product p, User u = null)
         {
             prod = p;
             Db db = new Db();
-            comments = db.getComments(p.getId());           
+            comments = db.getComments(p.getId());    
             InitializeComponent();
             if (comments != null)
             {
@@ -34,7 +36,7 @@ namespace PU3
             textBox2.Text = p.getDescription();
             if(u != null)
             {
-
+                prodLog = new(u.GetId(), p.getId());
                 panel3.Visible = true;
                 curr = u;
                 int[] wishlisted = u.getWishedIds();
@@ -164,18 +166,38 @@ namespace PU3
                     db.AddToWishList(curr.GetId(), prod.getId());
                     button2.ForeColor = Color.Red;
                     button2.Text = "♥";
+                    prodLog.UpdateAction("Wishlisted");
                 }
                 else
                 {
                     db.RemoveFromWishList(curr.GetId(), prod.getId());
                     button2.ForeColor = Color.Black;
                     button2.Text = "❤";
+                    prodLog.UpdateAction("Removed from wishlist");
                 }
             }
             else
             {
-                MessageBox.Show("Tik registruoti vartotojai gali įtraukti elementus į įsimintinų sąrašą");
+                MessageBox.Show("Tik registruoti vartotojai gali įtraukti elementus" +
+                    " į įsimintinų sąrašą");
             }
+        }
+
+        private void ShopItem_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (prodLog != null)
+            {
+                Db db = new();
+                db.addLog(prodLog);
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            curr.AddToCart(prod);
+            MessageBox.Show("Iš viso krepšelyje yra " + curr.GetCartLength().ToString() +
+                "prekė(s). Bendra suma: "+ curr.GetCartPrice().ToString() + " Eur.");
+
         }
     }
 }
