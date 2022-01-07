@@ -10,9 +10,11 @@ namespace PU3
     public class Order
     {
 
+        public int id = 0;
         public Product[] orderProducts;
         public bool isPayed = false;
         public double orderPrice = 0;
+        public string o_date = "";
 
         public string SerializeOrder()
         {
@@ -20,20 +22,27 @@ namespace PU3
             return json;
         }
 
-        public Order(Product[] orderList, bool isOrderPayed)
+        public Order(Product[] orderList, bool isOrderPayed, int id = 0, string date = "")
         {
-            /*orderProducts = new OrderItem[orderList.Length];
-            for(int i = 0; i < orderList.Length; i++)
-            {
-                orderProducts[i].ItemId = orderList[i].getId();
-                orderProducts[i].ItemName = orderList[i].getName();
-            }*/
             orderProducts = orderList;
-            isPayed = isOrderPayed; 
-            foreach(Product p in orderList)
-            {
-                orderPrice += p.getPrice();
+            isPayed = isOrderPayed;
+            if (orderList != null) {
+                foreach (Product p in orderList)
+                {
+                    orderPrice += p.getPrice();
+                }
             }
+
+            if(id != 0)
+            {
+                this.id = id;
+            }
+            if(!string.IsNullOrEmpty(date))
+            {
+                o_date = date; 
+
+            }
+        
         }
 
         public void ChangePayedStatus(bool status)

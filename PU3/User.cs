@@ -101,6 +101,7 @@ namespace PU3
             cart.Add(p);
             Db db = new();
             db.addToCart(this, p);
+            CountCartPrice();
         }
 
         protected string GetAvatar()
@@ -121,10 +122,18 @@ namespace PU3
 
         protected void CountCartPrice()
         {
+            CartPrice = 0;
             foreach (Product p in cart)
             {
                 CartPrice += p.getPrice();
             }
+        }
+
+        public void RemoveFromCart(int p_id)
+        {
+            Db db = new();
+            db.RemoveItemFromCart(p_id, Id);
+            LoadCart();
         }
 
     }

@@ -15,20 +15,28 @@ namespace PU3
     {
         User curr;
         Order o;
+        
         public Cart(User u)
         {
             curr = u;
             o = new(curr.getCart(), false);
             InitializeComponent();
-            
+            PrintPrice();
             RenderCart();
 
+            
+        }
+
+        protected void PrintPrice()
+        {
             if (curr.DaysToBd() <= 7 || curr.DaysToBd() >= 358)
             {
+                label3.Visible = true;
+                label4.Visible = true;
                 label4.Text += " " + o.getOrderPriceString();
                 o.ApplyBdDiscount();
             }
-            label5.Text += " " + o.getOrderPriceString();
+            label5.Text = "Galutine kaina: " + o.getOrderPriceString();
         }
 
         protected void RenderCart()
@@ -76,6 +84,7 @@ namespace PU3
                 removeBtn.Text = "X";
                 removeBtn.Size = new Size(18, 23);
                 removeBtn.Location = new Point(558,4);
+                removeBtn.Click += new EventHandler(RemoveFromCart);
 
                 pan.Controls.Add(removeBtn);
 
@@ -85,18 +94,44 @@ namespace PU3
             }
         }
 
+
+        protected void ClearPage()
+        {
+            panel1.Controls.Clear();
+
+            IEnumerable<Control> ctrls = panel1.Controls.Cast<Control>();
+            foreach (Control c in ctrls)
+            {
+                c.Dispose();
+            }
+        }
+
+
+        protected void RemoveFromCart(object sender, EventArgs e)
+        {
+            Product[] cart = curr.getCart();
+            Button btn = sender as Button;
+            int itemNr = Convert.ToInt32(btn.Name.Substring(btn.Name.Length - 1));
+            curr.RemoveFromCart(cart[itemNr].getId());
+            o = new(curr.getCart(), false);
+            ClearPage();
+            RenderCart();
+            PrintPrice();
+            
+        } 
+
         private void button2_Click(object sender, EventArgs e)
         {
-            /*Db db = new();
+            Db db = new();
             db.payForCart(curr, o);
 
-
+            
             panel1.Controls.Clear();
             panel1.Dispose();
 
-            MessageBox.Show("Užsakymas apmokėtas");*/
+            MessageBox.Show("Užsakymas apmokėtas");
 
-            MessageBox.Show(JsonConvert.SerializeObject(o));
+            //MessageBox.Show(JsonConvert.SerializeObject(o));
 
             this.Close();
         }

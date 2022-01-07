@@ -198,14 +198,25 @@ namespace PU3
             return dt;
         }
 
-  
-
-
         public DataTable FillProductGridView()
         {
             dbConnection.Open();
             MySqlDataAdapter Da = new();
             string sql = "SELECT `id`, `name`, `price`, `category` FROM `products`";
+            Da.SelectCommand = new MySqlCommand(sql, dbConnection);
+            DataTable dt = new();
+            Da.Fill(dt);
+            dbConnection.Close();
+            return dt;
+        }
+
+        public DataTable FillLogsGridView()
+        {
+            dbConnection.Open();
+            MySqlDataAdapter Da = new();
+            string sql = "SELECT user.nick, products.name, logs.date, logs.action FROM `user` " +
+                "RIGHT JOIN logs ON logs.user_id = user.id LEFT JOIN productsON logs.product_id " +
+                "= products.id";
             Da.SelectCommand = new MySqlCommand(sql, dbConnection);
             DataTable dt = new();
             Da.Fill(dt);
@@ -458,10 +469,16 @@ namespace PU3
         {
             string sql = string.Format("DELETE FROM `cart` WHERE `user_id` = {0}", u.GetId());
             Exec(sql);
-           
-            string json = JsonConvert.SerializeObject(o);
+
+            o.isPayed = true;
+            o.id = getMaxId();
             DateTime currDateTime = DateTime.Now;
-            string sqlFormattedDate = currDateTime.ToString("yyyy-MM-dd HH:mm:ss.fff");
+            string sqlFormattedDate = currDateTime.ToString("yyyy-MM-dd HH:mm:ss");
+            o.o_date = sqlFormattedDate;
+            string json = JsonConvert.SerializeObject(o);
+
+            sqlFormattedDate = currDateTime.ToString("yyyy-MM-dd HH:mm:ss.fff");
+
             sql = string.Format("INSERT INTO `orders`(`content`, `user_id`, `order_dt`) VALUES ('{0}','{1}','{2}')",json, u.GetId(), sqlFormattedDate);
             Exec(sql);
             u.ClearCart();
@@ -483,20 +500,67 @@ namespace PU3
             return rez;
         }
 
-        public string GetOrderList()
+        public Order[] GetOrderList()
         {
             string sql = string.Format("SELECT `content` FROM `orders` WHERE 1");
             dbConnection.Open();
             MySqlCommand cmd = new(sql, dbConnection);
             MySqlDataReader rdr = cmd.ExecuteReader();
-            string result = "";
+            List<Order> orders = new List<Order>();
+            Order tmp;
             while (rdr.Read()) {
-                result += rdr["content"].ToString() + "\n";
+                tmp = JsonConvert.DeserializeObject<Order>(rdr["content"].ToString());
+                //tmp.id = Convert.ToInt32(rdr["id"]);
+                orders.Add(tmp);
             }
+
             rdr.Close();
             dbConnection.Close();
 
-            return result;    
+            return orders.ToArray();    
+        }
+
+        public int getMaxId()
+        {
+            string sql = string.Format("SELECT MAX(id) AS max FROM `orders` WHERE 1");
+            dbConnection.Open();
+            MySqlCommand cmd = new(sql, dbConnection);
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            int rez = 0;
+            while (rdr.Read())
+            {
+                rez = (int)rdr["max"];
+            }
+            rdr.Close();
+            dbConnection.Close();
+            return rez+1;
+        }
+
+        public void RemoveItemFromCart(int p_id, int u_id)
+        {
+            string sql = string.Format("DELETE FROM `cart` WHERE `product_id` = {0} AND `user_id` = {1}", p_id, u_id);
+            Exec(sql);
+        }
+
+        public Order[] getUserOders(int u_id)
+        {
+            string sql = string.Format("SELECT `content` FROM `orders` WHERE `user_id` = {0}", u_id);
+            dbConnection.Open();
+            MySqlCommand cmd = new(sql, dbConnection);
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            List<Order> orders = new List<Order>();
+            Order tmp;
+            while (rdr.Read())
+            {
+                tmp = JsonConvert.DeserializeObject<Order>(rdr["content"].ToString());
+                orders.Add(tmp);
+            }
+
+            rdr.Close();
+            dbConnection.Close();
+
+            return orders.ToArray();
+
         }
     }
 }

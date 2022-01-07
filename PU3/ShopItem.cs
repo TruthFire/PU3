@@ -194,6 +194,7 @@ namespace PU3
 
         private void button1_Click(object sender, EventArgs e)
         {
+           
             curr.AddToCart(prod);
             MessageBox.Show("Iš viso krepšelyje yra " + curr.GetCartLength().ToString() +
                 "prekė(s). Bendra suma: "+ curr.GetCartPrice().ToString() + " Eur.");

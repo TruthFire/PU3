@@ -11,7 +11,7 @@ namespace PU3
         public int id { get; set; }
         public string name { get; set; }
         string Description { get; set; }
-        //int cat_id;
+
         string img { get; set; }
         public int Price { get; set; }
 

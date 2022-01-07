@@ -13,9 +13,18 @@ namespace PU3
             currentUser = u;
             if (currentUser.GetGroup() == 2)
             {
-                button2.Visible = true;
+                button2.Text = "APanel";
             }
+            if(currentUser.GetGroup() == 3)
+            {
+                button2.Text = "Užsakymai";
 
+            }
+            else if(currentUser.GetGroup() == 1)
+            {
+                button2.Text = "Mano užsakymai";
+
+            }
             
         }
 
@@ -33,9 +42,22 @@ namespace PU3
 
         private void button2_Click(object sender, EventArgs e)
         {
-            APanel ap = new(currentUser);
-            ap.Show();
-            this.Hide();
+            if (currentUser.GetGroup() == 2)
+            {
+                APanel ap = new(currentUser);
+                ap.Show();
+                this.Hide();
+            }
+            else if (currentUser.GetGroup() == 3)
+            {
+                SalesStats ss = new();
+                ss.Show();
+            }
+            else
+            {
+                MyOrders mo = new(currentUser);
+                mo.Show();
+            }
 
         }
 

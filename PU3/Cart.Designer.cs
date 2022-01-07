@@ -74,6 +74,7 @@ namespace PU3
             this.label4.Size = new System.Drawing.Size(110, 15);
             this.label4.TabIndex = 1;
             this.label4.Text = "Kaina be nuolaidos:";
+            this.label4.Visible = false;
             // 
             // label3
             // 
@@ -83,6 +84,7 @@ namespace PU3
             this.label3.Size = new System.Drawing.Size(83, 15);
             this.label3.TabIndex = 0;
             this.label3.Text = "Nuolaida: 10%";
+            this.label3.Visible = false;
             // 
             // button2
             // 
