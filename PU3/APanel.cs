@@ -35,6 +35,10 @@ namespace PU3
             BindingSource bs3 = new();
             bs3.DataSource = db.FillCategoryGridView();
             dataGridView3.DataSource = bs3;
+
+            BindingSource bs4 = new();
+            bs4.DataSource = db.FillLogsGridView();
+            dataGridView4.DataSource = bs4;
         }
 
         private void APanel_FormClosed(object sender, FormClosedEventArgs e)

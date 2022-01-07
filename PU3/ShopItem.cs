@@ -198,7 +198,7 @@ namespace PU3
             curr.AddToCart(prod);
             MessageBox.Show("Iš viso krepšelyje yra " + curr.GetCartLength().ToString() +
                 "prekė(s). Bendra suma: "+ curr.GetCartPrice().ToString() + " Eur.");
-
+            prodLog.UpdateAction("Added to cart");
         }
     }
 }

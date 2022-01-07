@@ -77,7 +77,7 @@ namespace PU3
         private void button1_Click(object sender, EventArgs e)
         {
             //string path = @"ataskaita_" + DateTime.Now.ToString() + ".json";
-            string path = @"MyTest_" + DateTime.Now.ToString("MM-dd-yyyy_H-mm-ss") + ".json";
+            string path = @"Ataskaita_" + DateTime.Now.ToString("MM-dd-yyyy_H-mm-ss") + ".json";
             // This text is added only once to the file.
             if (!File.Exists(path))
             {

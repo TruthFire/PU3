@@ -214,9 +214,7 @@ namespace PU3
         {
             dbConnection.Open();
             MySqlDataAdapter Da = new();
-            string sql = "SELECT user.nick, products.name, logs.date, logs.action FROM `user` " +
-                "RIGHT JOIN logs ON logs.user_id = user.id LEFT JOIN productsON logs.product_id " +
-                "= products.id";
+            string sql = "SELECT user.nick, products.name, logs.date, logs.action FROM `user` RIGHT JOIN logs ON logs.user_id = user.id LEFT JOIN products ON logs.product_id = products.id";
             Da.SelectCommand = new MySqlCommand(sql, dbConnection);
             DataTable dt = new();
             Da.Fill(dt);

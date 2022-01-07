@@ -20,7 +20,7 @@ namespace PU3
         {
             
             Db db = new();
-            u = db.GetUser("TruthFire", "111");
+            // u = db.GetUser("usr", "111"); //dbg mode   
             nodes = db.getCategories();
             prods = db.GetProducts(1);
             InitializeComponent();
@@ -40,9 +40,7 @@ namespace PU3
                 treeView1.Nodes.Add(nodes[i]);
             }
             renderedPanels = ShowProducts(prods);
-            
-            SalesStats stats = new SalesStats();
-            stats.Show();
+
 
 
             //this.Controls.Add(new LinkLabel() { Name = "ll1", Text = "Link", Location = new System.Drawing.Point(34, 134), Size = new Size(60,15) });
