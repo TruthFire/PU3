@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace PU3
@@ -18,7 +14,7 @@ namespace PU3
         string[] nodes;
         public Shop(User u = null)
         {
-            
+
             Db db = new();
             // u = db.GetUser("usr", "111"); //dbg mode   
             nodes = db.getCategories();
@@ -33,7 +29,7 @@ namespace PU3
                 button4.Visible = true;
             }
 
-            
+
 
             for (int i = 0; i < nodes.Length; i++)
             {
@@ -49,17 +45,17 @@ namespace PU3
 
         public List<Panel> ShowProducts(Product[] prods)
         {
-            
+
             List<Panel> panels = new List<Panel>();
             int AddY = 0, xMult = 1, rendered = 0;
-            for(int i = 0;i < prods.Length; i++)
+            for (int i = 0; i < prods.Length; i++)
             {
                 if (rendered == 4)
                 {
                     xMult = 1;
                     AddY += 163;
                     rendered = 0;
-                    
+
                 }
                 Panel pan = new Panel();
                 pan.Name = "panel" + i;
@@ -67,9 +63,9 @@ namespace PU3
                 pan.Location = new Point(152 * xMult, 57 + AddY); //location
                 pan.Size = new Size(133, 157);  //size
                 pan.BackColor = Color.White;
-                
+
                 LinkLabel prodLabel = new();
-                prodLabel.Name = "prodLl"+i.ToString();
+                prodLabel.Name = "prodLl" + i.ToString();
                 prodLabel.Text = prods[i].getName();
                 prodLabel.Location = new Point(3, 130);
                 prodLabel.Click += new EventHandler(this.prodLl_Click);
@@ -88,11 +84,11 @@ namespace PU3
                 this.Controls.Add(pan);
                 xMult++;
                 rendered++;
-               
+
             }
 
-            
-            
+
+
             treeView1.Height = 162 * (int)Math.Ceiling((double)panels.Count() / 4);
             return panels;
 
@@ -116,10 +112,10 @@ namespace PU3
 
 
         }
-        
+
         private void button1_Click(object sender, EventArgs e)
         {
-           foreach(Panel panel in this.renderedPanels)
+            foreach (Panel panel in this.renderedPanels)
             {
                 panel.Dispose();
             }
@@ -131,12 +127,12 @@ namespace PU3
             this.Hide();
             Auth auth = new Auth();
             auth.Show();
-            
+
         }
 
         private void ClearPanels()
         {
-           foreach (Panel panel in this.renderedPanels)
+            foreach (Panel panel in this.renderedPanels)
             {
                 panel.Dispose();
             }

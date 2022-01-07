@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace PU3
@@ -24,7 +20,7 @@ namespace PU3
         {
             prod = p;
             Db db = new Db();
-            comments = db.getComments(p.getId());    
+            comments = db.getComments(p.getId());
             InitializeComponent();
             if (comments != null)
             {
@@ -34,7 +30,7 @@ namespace PU3
             label7.Text = p.getPrice() + " Eur.";
             pictureBox1.Load("https://i.imgur.com/" + p.getImg());
             textBox2.Text = p.getDescription();
-            if(u != null)
+            if (u != null)
             {
                 prodLog = new(u.GetId(), p.getId());
                 panel3.Visible = true;
@@ -47,14 +43,14 @@ namespace PU3
                 }
             }
 
-            if(comments != null)
-            commentPanels = RenderComments(comments);
+            if (comments != null)
+                commentPanels = RenderComments(comments);
 
-            
-           
+
+
         }
 
-        
+
         private void ClearComments()
         {
             if (commentPanels != null)
@@ -69,7 +65,7 @@ namespace PU3
 
                     p.Dispose();
                 }
-                
+
             }
 
             commentPanels = null;
@@ -87,11 +83,11 @@ namespace PU3
                 pan.Location = new Point(6, panY); //location
                 pan.Size = new Size(642, 70);  //size
                 pan.BackColor = Color.White;
-                
+
                 Label nameLabel = new Label();
                 nameLabel.Name = "NameLabel" + i.ToString();
                 nameLabel.Text = coms[i].GetAuthor() + " • " + coms[i].getPDate();
-                nameLabel.Location = new Point(5,4);
+                nameLabel.Location = new Point(5, 4);
                 nameLabel.Width = 300;
                 pan.Controls.Add(nameLabel);
 
@@ -116,7 +112,7 @@ namespace PU3
                 tb.ReadOnly = true;
                 tb.BackColor = Color.White;
                 tb.BorderStyle = BorderStyle.None;
-                
+
                 pan.Controls.Add(tb);
 
                 comPanels.Add(pan);
@@ -125,13 +121,14 @@ namespace PU3
 
                 panel2.Controls.Add(pan);
                 panY += 85;
-            } 
+            }
             return comPanels;
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            if (curr != null) {
+            if (curr != null)
+            {
                 Db db = new();
                 db.AddComment(curr.GetId(), prod.getId(), textBox1.Text, DateTime.Now);
 
@@ -151,8 +148,8 @@ namespace PU3
 
             ClearComments();
             this.comments = db.getComments(this.prod.getId());
-            if(comments != null)
-            commentPanels = RenderComments(comments);
+            if (comments != null)
+                commentPanels = RenderComments(comments);
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -162,7 +159,7 @@ namespace PU3
                 Db db = new();
                 if (button2.Text == "❤")
                 {
-                    
+
                     db.AddToWishList(curr.GetId(), prod.getId());
                     button2.ForeColor = Color.Red;
                     button2.Text = "♥";
@@ -194,10 +191,10 @@ namespace PU3
 
         private void button1_Click(object sender, EventArgs e)
         {
-           
+
             curr.AddToCart(prod);
             MessageBox.Show("Iš viso krepšelyje yra " + curr.GetCartLength().ToString() +
-                "prekė(s). Bendra suma: "+ curr.GetCartPrice().ToString() + " Eur.");
+                "prekė(s). Bendra suma: " + curr.GetCartPrice().ToString() + " Eur.");
             prodLog.UpdateAction("Added to cart");
         }
     }

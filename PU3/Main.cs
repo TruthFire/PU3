@@ -15,17 +15,17 @@ namespace PU3
             {
                 button2.Text = "APanel";
             }
-            if(currentUser.GetGroup() == 3)
+            if (currentUser.GetGroup() == 3)
             {
                 button2.Text = "Užsakymai";
 
             }
-            else if(currentUser.GetGroup() == 1)
+            else if (currentUser.GetGroup() == 1)
             {
                 button2.Text = "Mano užsakymai";
 
             }
-            
+
         }
 
         private void button1_Click(object sender, EventArgs e)

@@ -10,7 +10,7 @@ namespace PU3
         protected int Group { get; set; }
         protected int Id { get; set; }
         protected string Avatar = null;
-       
+
         protected int[] WishListedIds { get; set; }
 
         protected List<Product> cart = new();
@@ -59,7 +59,7 @@ namespace PU3
         {
             return Group;
         }
-        
+
         public int[] getWishedIds()
         {
             Db db = new Db();

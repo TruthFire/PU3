@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace PU3
@@ -29,7 +24,8 @@ namespace PU3
 
         private void renderWishList()
         {
-            if (wishlistedItems != null) {
+            if (wishlistedItems != null)
+            {
                 int y = 8;
                 Db db = new();
                 for (int i = 0; i < wishlistedItems.Length; i++)
@@ -43,8 +39,8 @@ namespace PU3
 
                     Label nameLabel = new Label();
                     nameLabel.Text = db.getProductNameById(wishlistedItems[i]);
-                    nameLabel.Location = new Point(14,11);
-                    nameLabel.Name = "namelbl"+i.ToString();
+                    nameLabel.Location = new Point(14, 11);
+                    nameLabel.Name = "namelbl" + i.ToString();
 
                     p.Controls.Add(nameLabel);
 
@@ -88,7 +84,7 @@ namespace PU3
 
         private void ClearWishList()
         {
-            foreach(Panel p in renderedItems)
+            foreach (Panel p in renderedItems)
             {
                 p.Controls.Clear();
                 p.Dispose();
@@ -101,12 +97,12 @@ namespace PU3
             int pNum = Convert.ToInt32(ll.Name.Substring(ll.Name.Length - 1));
             Db db = new();
             db.RemoveFromWishList(curr.GetId(), wishlistedItems[pNum]);
-            
+
             ClearWishList();
 
             wishlistedItems = curr.getWishedIds();
-            if(wishlistedItems.Length > 0)
-            renderWishList();
+            if (wishlistedItems.Length > 0)
+                renderWishList();
         }
 
         private void WishList_FormClosed(object sender, FormClosedEventArgs e)

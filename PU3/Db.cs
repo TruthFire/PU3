@@ -1,8 +1,8 @@
-﻿using System;
-using MySql.Data.MySqlClient;
-using System.Data;
-using System.Collections.Generic;
+﻿using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Data;
 
 /* CREATE TABLE "User" (
 	"id"	INTEGER NOT NULL,
@@ -25,17 +25,17 @@ namespace PU3
         MySqlConnection dbConnection = new(@"server=localhost;userid=root;password=;database=PU");
         public Db()
         {
-   
+
         }
 
-         public void CreateUser(User u)
-         { 
+        public void CreateUser(User u)
+        {
             string sql = string.Format(
             "INSERT INTO `User`(`nick`, `password`, `name`, `surename`, `dob`, `user_group`, `avatar`) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', 1, 'NoAvatar');",
             u.GetNick(), u.GetPwd(), u.GetName(), u.GetSurename(), u.GetDob()
             );
             Exec(sql);
-         }
+        }
 
         public bool CheckNick(string nick)
         {
@@ -50,7 +50,7 @@ namespace PU3
 
 
         public int TryAuth(string name, string pwd)
-        { 
+        {
             string sql = string.Format("SELECT `id` FROM `User` WHERE (`nick`='{0}' AND `password`='{1}')", name, pwd);
             dbConnection.Open();
             MySqlCommand cmd = new(sql, dbConnection);
@@ -94,7 +94,7 @@ namespace PU3
                 dbConnection.Open();
                 MySqlCommand cmd = new(sql, dbConnection);
                 MySqlDataReader rdr = cmd.ExecuteReader();
-                
+
                 while (rdr.Read())
                 {
                     nick = rdr["nick"].ToString();
@@ -122,8 +122,8 @@ namespace PU3
         public void UpdateAvatar(int id, string fn)
         {
             string sql = String.Format("UPDATE `User` SET `avatar` = '{0}' WHERE `id` = {1}", fn, id);
-            Exec(sql); 
-            
+            Exec(sql);
+
         }
 
         protected void Exec(string sql)
@@ -136,7 +136,7 @@ namespace PU3
 
         public bool CheckPwd(int id, string pwd)
         {
-            
+
             string sql = String.Format("SELECT `password` FROM `User` WHERE `id` = '{0}'", id);
             dbConnection.Open();
             MySqlCommand cmd = new(sql, dbConnection);
@@ -144,7 +144,7 @@ namespace PU3
             string pass = "";
             while (rdr.Read())
             {
-                   pass = rdr["password"].ToString();
+                pass = rdr["password"].ToString();
             }
             dbConnection.Close();
             return pass == pwd;
@@ -158,7 +158,7 @@ namespace PU3
             cmd.ExecuteNonQuery();
             dbConnection.Close();
         }
-        
+
         public string GetAvatar(int id)
         {
             string sql = string.Format("SELECT `avatar` FROM `User` where `id` = '{0}'", id);
@@ -248,7 +248,7 @@ namespace PU3
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
-                products.Add(new((int)rdr["id"],rdr["name"].ToString(), rdr["img"].ToString(), (int)rdr["price"], rdr["description"].ToString()));
+                products.Add(new((int)rdr["id"], rdr["name"].ToString(), rdr["img"].ToString(), (int)rdr["price"], rdr["description"].ToString()));
             }
             dbConnection.Close();
 
@@ -265,7 +265,7 @@ namespace PU3
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
-               p  = new((int)rdr["id"], rdr["name"].ToString(), rdr["img"].ToString(), (int)rdr["price"], rdr["description"].ToString());
+                p = new((int)rdr["id"], rdr["name"].ToString(), rdr["img"].ToString(), (int)rdr["price"], rdr["description"].ToString());
             }
             dbConnection.Close();
 
@@ -311,7 +311,7 @@ namespace PU3
 
         public void addProduct(string name, string category, int price, string img, string description)
         {
-            string sql = string.Format("INSERT INTO `products`(`name`, `price`, `category`, `img`, `description`) VALUES ('{0}','{1}','{2}','{3}','{4}')",name, price, getCategoryId(category), img, description);
+            string sql = string.Format("INSERT INTO `products`(`name`, `price`, `category`, `img`, `description`) VALUES ('{0}','{1}','{2}','{3}','{4}')", name, price, getCategoryId(category), img, description);
             Exec(sql);
         }
         public int GetCommentAmount(int product)
@@ -329,7 +329,7 @@ namespace PU3
             return amount;
         }
 
-        public void AddComment(int posterId,int productId, string text, DateTime d)
+        public void AddComment(int posterId, int productId, string text, DateTime d)
         {
             string sql = string.Format("INSERT INTO `comments`(`author_id`, `product_id`, `comment`, `c_date`) VALUES ('{0}','{1}','{2}', '{3}')", posterId, productId, text, d.ToString("dd-MM-yyyy. HH:mm"));
             Exec(sql);
@@ -346,7 +346,7 @@ namespace PU3
             string sql = string.Format("INSERT INTO `wishlist`(`user_id`,`product_id`) VALUES('{0}','{1}')", uId, pId);
             Exec(sql);
         }
-        
+
         public void RemoveFromWishList(int uId, int pId)
         {
             string sql = string.Format("DELETE FROM `wishlist` WHERE `user_id` = '{0}' AND `product_id` = '{1}'", uId, pId);
@@ -396,7 +396,7 @@ namespace PU3
         {
             string sql = string.Format("SELECT `name` FROM `products` WHERE `id`='{0}'", pId);
             dbConnection.Open();
-            MySqlCommand cmd = new(sql, dbConnection); 
+            MySqlCommand cmd = new(sql, dbConnection);
             MySqlDataReader rdr = cmd.ExecuteReader();
             string prodName = "";
             while (rdr.Read())
@@ -456,7 +456,7 @@ namespace PU3
             }
             dbConnection.Close();
             List<Product> cart = new();
-            foreach(int id in cartIds)
+            foreach (int id in cartIds)
             {
                 cart.Add(GetProduct(id));
             }
@@ -477,7 +477,7 @@ namespace PU3
 
             sqlFormattedDate = currDateTime.ToString("yyyy-MM-dd HH:mm:ss.fff");
 
-            sql = string.Format("INSERT INTO `orders`(`content`, `user_id`, `order_dt`) VALUES ('{0}','{1}','{2}')",json, u.GetId(), sqlFormattedDate);
+            sql = string.Format("INSERT INTO `orders`(`content`, `user_id`, `order_dt`) VALUES ('{0}','{1}','{2}')", json, u.GetId(), sqlFormattedDate);
             Exec(sql);
             u.ClearCart();
         }
@@ -489,7 +489,7 @@ namespace PU3
             MySqlCommand cmd = new(sql, dbConnection);
             MySqlDataReader rdr = cmd.ExecuteReader();
             string rez = "";
-            while(rdr.Read())
+            while (rdr.Read())
             {
                 rez = rdr["amount"].ToString();
             }
@@ -506,7 +506,8 @@ namespace PU3
             MySqlDataReader rdr = cmd.ExecuteReader();
             List<Order> orders = new List<Order>();
             Order tmp;
-            while (rdr.Read()) {
+            while (rdr.Read())
+            {
                 tmp = JsonConvert.DeserializeObject<Order>(rdr["content"].ToString());
                 //tmp.id = Convert.ToInt32(rdr["id"]);
                 orders.Add(tmp);
@@ -515,7 +516,7 @@ namespace PU3
             rdr.Close();
             dbConnection.Close();
 
-            return orders.ToArray();    
+            return orders.ToArray();
         }
 
         public int getMaxId()
@@ -531,7 +532,7 @@ namespace PU3
             }
             rdr.Close();
             dbConnection.Close();
-            return rez+1;
+            return rez + 1;
         }
 
         public void RemoveItemFromCart(int p_id, int u_id)

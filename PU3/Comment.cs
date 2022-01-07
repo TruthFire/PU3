@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PU3
+﻿namespace PU3
 {
     public class Comment
     {
@@ -12,7 +6,7 @@ namespace PU3
         string CommentText;
         string Author;
         string posted_date;
-        
+
         public Comment(int id, string comm_text, int author_id, string p_date)
         {
             Id = id;

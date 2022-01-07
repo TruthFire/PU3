@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Newtonsoft.Json;
 
 namespace PU3
 {
@@ -15,7 +11,7 @@ namespace PU3
     {
         User curr;
         Order o;
-        
+
         public Cart(User u)
         {
             curr = u;
@@ -24,7 +20,7 @@ namespace PU3
             PrintPrice();
             RenderCart();
 
-            
+
         }
 
         protected void PrintPrice()
@@ -43,7 +39,7 @@ namespace PU3
         {
             Product[] cart = curr.getCart();
             int panY = 9;
-            for(int i = 0; i< cart.Length; i++)
+            for (int i = 0; i < cart.Length; i++)
             {
                 Panel pan = new();
                 pan.Name = "CartPan" + i.ToString();
@@ -56,7 +52,7 @@ namespace PU3
                 pb.Name = "CartPb" + i.ToString();
                 pb.Location = new Point(4, 4);
                 pb.Load("https://i.imgur.com/" + cart[i].getImg());
-                pb.Size = new Size(75,75);
+                pb.Size = new Size(75, 75);
                 pb.BorderStyle = BorderStyle.FixedSingle;
                 pb.SizeMode = PictureBoxSizeMode.StretchImage;
 
@@ -74,16 +70,16 @@ namespace PU3
                 Label l2 = new();
                 l2.Location = new Point(85, 29);
                 l2.Name = "PriceLabel" + i.ToString();
-                l2.Text = "Kaina: " +cart[i].getPrice() + " Eur.";
+                l2.Text = "Kaina: " + cart[i].getPrice() + " Eur.";
                 l2.AutoSize = true;
 
                 pan.Controls.Add(l2);
 
                 Button removeBtn = new();
-                removeBtn.Name = "removeBtn"+i.ToString();
+                removeBtn.Name = "removeBtn" + i.ToString();
                 removeBtn.Text = "X";
                 removeBtn.Size = new Size(18, 23);
-                removeBtn.Location = new Point(558,4);
+                removeBtn.Location = new Point(558, 4);
                 removeBtn.Click += new EventHandler(RemoveFromCart);
 
                 pan.Controls.Add(removeBtn);
@@ -117,15 +113,15 @@ namespace PU3
             ClearPage();
             RenderCart();
             PrintPrice();
-            
-        } 
+
+        }
 
         private void button2_Click(object sender, EventArgs e)
         {
             Db db = new();
             db.payForCart(curr, o);
 
-            
+
             panel1.Controls.Clear();
             panel1.Dispose();
 

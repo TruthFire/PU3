@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using System.IO;
-using Newtonsoft.Json;
 
 namespace PU3
 {
@@ -23,7 +23,7 @@ namespace PU3
         protected void RenderOrders()
         {
             int PanY = 3;
-            for(int i = 0 ; i < orders.Length; i++)
+            for (int i = 0; i < orders.Length; i++)
             {
                 Panel p = new Panel();
                 p.Name = "order" + i.ToString();
@@ -33,16 +33,16 @@ namespace PU3
 
                 Label l1 = new Label();
                 l1.Text = "Id: " + orders[i].id.ToString();
-                l1.Location = new Point(8,5);
+                l1.Location = new Point(8, 5);
                 l1.Name = "idlbl" + i.ToString();
                 l1.AutoSize = true;
 
                 p.Controls.Add(l1);
 
                 string items = "";
-                for(int j = 0; j < orders[i].orderProducts.Count(); j++)
+                for (int j = 0; j < orders[i].orderProducts.Count(); j++)
                 {
-                    items += orders[i].orderProducts[j].name +"; ";
+                    items += orders[i].orderProducts[j].name + "; ";
                 }
 
                 Label l2 = new Label();
@@ -87,16 +87,16 @@ namespace PU3
                     sw.WriteLine("{");
 
                     for (int i = 0; i < orders.Length; i++)
-                    {   
-                        string line = "\"order" +orders[i].id + "\":" + JsonConvert.SerializeObject(orders[i]);
-                        if(i != orders.Length - 1)
+                    {
+                        string line = "\"order" + orders[i].id + "\":" + JsonConvert.SerializeObject(orders[i]);
+                        if (i != orders.Length - 1)
                         {
                             line += ",";
                         }
-                        
+
                         sw.WriteLine(line);
                     }
-                    sw.WriteLine("}"); 
+                    sw.WriteLine("}");
 
                 }
 
@@ -104,7 +104,7 @@ namespace PU3
 
 
             }
-            
+
         }
     }
 }

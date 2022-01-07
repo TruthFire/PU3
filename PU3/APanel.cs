@@ -1,13 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Collections;
 
 namespace PU3
 {
@@ -51,7 +43,7 @@ namespace PU3
         {
             try
             {
-                if(curr.GetGroup() == 2)
+                if (curr.GetGroup() == 2)
                 {
                     Db db = new();
                     db.DeleteUser(Convert.ToInt32(this.textBox1.Text));
@@ -106,25 +98,25 @@ namespace PU3
 
         private void button6_Click(object sender, EventArgs e)
         {
-             try
-             {
-                 if (curr.GetGroup() == 2)
-                 {
-                     Db db = new();
-                     db.DeleteCategory(Convert.ToInt32(this.textBox2.Text));
-                     UpdateDg();
-                     MessageBox.Show("Kategorija ir visi joje esantys produktai buvo pašalinti");
-                 }
-                 else
-                 {
-                     throw new ArgumentException("Jūs neturite prieigos vykdyti šią komandą.");
-                 }
+            try
+            {
+                if (curr.GetGroup() == 2)
+                {
+                    Db db = new();
+                    db.DeleteCategory(Convert.ToInt32(this.textBox2.Text));
+                    UpdateDg();
+                    MessageBox.Show("Kategorija ir visi joje esantys produktai buvo pašalinti");
+                }
+                else
+                {
+                    throw new ArgumentException("Jūs neturite prieigos vykdyti šią komandą.");
+                }
 
-             }
-             catch (Exception exc)
-             {
-                 MessageBox.Show(exc.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-             }
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void button5_Click(object sender, EventArgs e)

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace PU3
 {
@@ -26,23 +21,24 @@ namespace PU3
         {
             orderProducts = orderList;
             isPayed = isOrderPayed;
-            if (orderList != null) {
+            if (orderList != null)
+            {
                 foreach (Product p in orderList)
                 {
                     orderPrice += p.getPrice();
                 }
             }
 
-            if(id != 0)
+            if (id != 0)
             {
                 this.id = id;
             }
-            if(!string.IsNullOrEmpty(date))
+            if (!string.IsNullOrEmpty(date))
             {
-                o_date = date; 
+                o_date = date;
 
             }
-        
+
         }
 
         public void ChangePayedStatus(bool status)

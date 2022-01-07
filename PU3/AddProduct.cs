@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace PU3
@@ -19,7 +12,7 @@ namespace PU3
             Db db = new();
             String[] categories = db.getCategories();
             InitializeComponent();
-            for(int i = 0; i < categories.Length; i++)
+            for (int i = 0; i < categories.Length; i++)
             {
                 comboBox1.Items.Add(categories[i]);
             }

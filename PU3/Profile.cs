@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
-using System.Windows.Forms;
 using System.IO;
+using System.Windows.Forms;
 
 namespace PU3
 {
@@ -17,16 +17,16 @@ namespace PU3
             if (db.GetAvatar(u.GetId()) != "NoAvatar")
             {
                 avtr = Image.FromFile(string.Format(@"img\avatars\{0}\{1}", curr.GetId(), db.GetAvatar(u.GetId())));
-                this.pictureBox1.Image = new Bitmap(avtr,100,100);
+                this.pictureBox1.Image = new Bitmap(avtr, 100, 100);
             }
             else
             {
                 avtr = Image.FromFile(@"NoAvatar.png");
-                
+
             }
             this.pictureBox1.Image = new Bitmap(avtr, 100, 100);
         }
-        
+
         private void EditProfileSwitch(bool status) // True = EditMode OFF, false = EditMode ON
         {
             this.textBox1.ReadOnly = status;
@@ -55,7 +55,7 @@ namespace PU3
             if (open.ShowDialog() == DialogResult.OK)
             {
                 var fn = open.FileName;
-                
+
                 String AvtrDir = String.Format(@"img\avatars\{0}\" + Path.GetFileName(fn), curr.GetId());
                 if (!File.Exists(AvtrDir))
                 {
@@ -81,7 +81,7 @@ namespace PU3
             string NewPwd = textBox2.Text;
             string NewPwd1 = textBox3.Text;
             Db db = new();
-            if(NewPwd != NewPwd1)
+            if (NewPwd != NewPwd1)
             {
                 this.label5.Text = "Nauji slaptažodžiai nesutampa";
             }
@@ -98,7 +98,7 @@ namespace PU3
 
         private void button2_Click(object sender, EventArgs e)
         {
-           // Main m = new(curr);
+            // Main m = new(curr);
             //m.Show();
             this.Close();
         }
